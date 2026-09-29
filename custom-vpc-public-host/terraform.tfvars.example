@@ -1,0 +1,25 @@
+# terraform.tfvars.example — copy to terraform.tfvars and edit.
+#
+#   cp terraform.tfvars.example terraform.tfvars
+#
+# terraform.tfvars is gitignored, so this file is the committed record of the
+# inputs this stack needs. Every variable also has a default in variables.tf;
+# the two marked REQUIRED default to an empty string and fail at apply if unset.
+
+# ==== REQUIRED =============================================================
+
+# The EC2 key pair name in ap-south-1. The matching .pem must be on the machine
+# you intend to SSH from. An empty value produces an apply-time error.
+key_name = "admin"
+
+# No default instance type is set in variables.tf.
+#   't3.micro'=1GB Mem  't3.small'=2GB Mem  'c7i-flex.large'=4GB Mem  'm7i-flex.large'=8GB Mem
+instance_type = "c7i-flex.large"
+
+# ==== OPTIONAL — the values below are the defaults from variables.tf =======
+
+aws_region        = "ap-south-1"
+vpc_cidr          = "10.0.0.0/16"
+subnet_cidr       = "10.0.1.0/24"   # must sit inside vpc_cidr
+availability_zone = "ap-south-1a"   # must belong to aws_region
+project_name      = ""   # prefixes the names of VPC, IGW, subnet, SG, route table, instance, and EIP
