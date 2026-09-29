@@ -1,0 +1,35 @@
+# terraform.tfvars.example — copy to terraform.tfvars and edit.
+#
+#   cp terraform.tfvars.example terraform.tfvars
+#
+# terraform.tfvars is gitignored, so this file is the committed record of the
+# inputs this stack needs.
+
+# ==== REQUIRED =============================================================
+
+# Ubuntu AMI IDs valid in ap-south-1. The region is hard-coded in provider.tf and
+# these are NOT looked up automatically, so a stale ID fails at apply.
+# To find a current one:
+#   aws ec2 describe-images --owners 099720109477 --region ap-south-1 --filters \
+#     "Name=name,Values=ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*" \
+#     --query 'sort_by(Images,&CreationDate)[-1].ImageId' --output text
+ubuntu_ansible_master_ami_id = "ami-01a00762f46d584a1"
+ubuntu_ansible_worker_ami_id = "ami-01a00762f46d584a1"
+
+# The EC2 key pair name in ap-south-1. The matching .pem must be on the machine
+# you intend to SSH from.
+key_name = "admin"
+
+# ==== OPTIONAL — the values below are the defaults from variables.tf =======
+
+# Number of worker instances to create. Validated: must be a positive whole
+# number, so 0 and 2.5 are rejected at plan time. The control node is always
+# exactly one instance and is not counted here.
+ansible_worker_count = 3
+
+#   't3.micro'=1GB Mem  't3.small'=2GB Mem  'c7i-flex.large'=4GB Mem  'm7i-flex.large'=8GB Mem
+ubuntu_ansible_master_instance_type = "t3.small"
+ubuntu_ansible_worker_instance_type = "t3.small"
+
+# The master and worker AMI IDs are separate variables and may diverge, though
+# both point at the same Ubuntu image above.
