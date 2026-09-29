@@ -1,0 +1,32 @@
+# terraform.tfvars.example — copy to terraform.tfvars and edit.
+#
+#   cp terraform.tfvars.example terraform.tfvars
+#
+# terraform.tfvars is gitignored, so this file is the committed record of the
+# inputs this stack needs. Every variable defaults to an empty string in
+# variables.tf, so nothing useful deploys without this file.
+
+# ==== REQUIRED =============================================================
+
+# An Ubuntu AMI ID valid in ap-south-1. The region is hard-coded in provider.tf,
+# and this stack does NOT look the AMI up — a stale ID fails at apply.
+# To find a current one:
+#   aws ec2 describe-images --owners 099720109477 --region ap-south-1 --filters \
+#     "Name=name,Values=ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*" \
+#     --query 'sort_by(Images,&CreationDate)[-1].ImageId' --output text
+ubuntu_ami_id = "ami-01a00762f46d584a1"
+
+# The EC2 key pair name in ap-south-1. The matching .pem must be on the machine
+# you intend to SSH from.
+key_name = "admin"
+
+#   't3.micro'=1GB Mem  't3.small'=2GB Mem  'c7i-flex.large'=4GB Mem  'm7i-flex.large'=8GB Mem
+instance_type = "c7i-flex.large"
+
+# ==== NOT USED =============================================================
+# Declared in variables.tf but read by no active resource — leftovers from the
+# Amazon Linux and RHEL instances that are commented out in main.tf. Only the
+# Ubuntu instance deploys. Uncomment these if you re-enable those blocks.
+#
+# amazon_ami_id = ""
+# rhel_ami_id   = ""
